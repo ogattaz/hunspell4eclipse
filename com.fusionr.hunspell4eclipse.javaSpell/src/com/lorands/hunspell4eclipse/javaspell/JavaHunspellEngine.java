@@ -36,7 +36,7 @@ import com.lorands.hunspell4eclipse.ICompletionProposalCreator;
 import com.stibocatalog.hunspell.CLog;
 
 /**
- * @author L—r‡nd Somogyi < lorand dot somogyi at gmail dot com >
+ * @author Lorand Somogyi < lorand dot somogyi at gmail dot com >
  *         http://lorands.com
  * @author Olivier Gattaz < olivier dot gattaz at isandlatech dot com >
  * @date 12/05/2011 (dd/mm/yy)
@@ -56,8 +56,7 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 		 * @param region
 		 * @param locale
 		 */
-		public HunspellJavaSpellCheckIterator(IDocument document,
-				IRegion region, Locale locale) {
+		public HunspellJavaSpellCheckIterator(IDocument document, IRegion region, Locale locale) {
 			super(document, region, locale);
 		}
 
@@ -70,17 +69,12 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 				return false;
 
 			boolean wResult = false;
-			if (aToken.length() > 2
-					&& aToken.charAt(0) == IJavaDocTagConstants.JAVADOC_TAG_PREFIX) {
+			if (aToken.length() > 2 && aToken.charAt(0) == IJavaDocTagConstants.JAVADOC_TAG_PREFIX) {
 
-				if (super.isToken(aToken,
-						IJavaDocTagConstants.JAVADOC_ROOT_TAGS)
-						|| super.isToken(aToken,
-								IJavaDocTagConstants.JAVADOC_PARAM_TAGS)
-						|| super.isToken(aToken,
-								IJavaDocTagConstants.JAVADOC_LINK_TAGS)
-						|| super.isToken(aToken,
-								IJavaDocTagConstants.JAVADOC_REFERENCE_TAGS)) {
+				if (super.isToken(aToken, IJavaDocTagConstants.JAVADOC_ROOT_TAGS)
+						|| super.isToken(aToken, IJavaDocTagConstants.JAVADOC_PARAM_TAGS)
+						|| super.isToken(aToken, IJavaDocTagConstants.JAVADOC_LINK_TAGS)
+						|| super.isToken(aToken, IJavaDocTagConstants.JAVADOC_REFERENCE_TAGS)) {
 					wResult = true;
 				}
 			}
@@ -88,26 +82,24 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 			// system
 			// property is defined).
 			if (CLog.on())
-				CLog.logOut(this, "isJavaDocWords",
-						"[%s] is javadoc token [%b]", String.valueOf(aToken),
-						wResult);
+				CLog.logOut(this, "isJavaDocWords", "[%s] is javadoc token [%b]", String.valueOf(aToken), wResult);
 
 			return wResult;
 		}
 
 		/*
-		 * (non-Javadoc)
+		 * OG_20180112 Fix : Change the return type of 'next(..)' to 'String' to be
+		 * valid according the return type of the super method SpellCheckIterator#next()
 		 * 
-		 * @see
-		 * org.eclipse.jdt.internal.ui.text.spelling.SpellCheckIterator#next()
+		 * @see org.eclipse.jdt.internal.ui.text.spelling.SpellCheckIterator#next()
 		 */
 		@Override
-		public Object next() {
+		public String next() {
 
-			String token = (String) super.next();
+			String token = super.next();
 
 			while (isJavaDocToken(token))
-				token = (String) super.next();
+				token = super.next();
 
 			return token;
 		}
@@ -117,23 +109,19 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 	 * @author Lorand Somogyi
 	 * 
 	 */
-	public static class JavaCompletionProposal implements
-			IJavaCompletionProposal {
+	public static class JavaCompletionProposal implements IJavaCompletionProposal {
 		private final CompletionProposal inner;
 
 		private int relevance = 1;
 
-		public JavaCompletionProposal(String replacementString,
-				int replacementOffset, int replacementLength, int cursorPosition) {
-			inner = new CompletionProposal(replacementString,
-					replacementOffset, replacementLength, cursorPosition);
+		public JavaCompletionProposal(String replacementString, int replacementOffset, int replacementLength,
+				int cursorPosition) {
+			inner = new CompletionProposal(replacementString, replacementOffset, replacementLength, cursorPosition);
 		}
 
-		public JavaCompletionProposal(String replacementString,
-				int replacementOffset, int replacementLength,
+		public JavaCompletionProposal(String replacementString, int replacementOffset, int replacementLength,
 				int cursorPosition, int relevance) {
-			inner = new CompletionProposal(replacementString,
-					replacementOffset, replacementLength, cursorPosition);
+			inner = new CompletionProposal(replacementString, replacementOffset, replacementLength, cursorPosition);
 			this.relevance = relevance;
 		}
 
@@ -178,32 +166,28 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 	 * @author Lorand Somogyi
 	 * 
 	 */
-	public static class JavaProposalCreator implements
-			ICompletionProposalCreator {
+	public static class JavaProposalCreator implements ICompletionProposalCreator {
 
 		private static final int relevance = 1;
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * com.lorands.hunspell4eclipse.ICompletionProposalCreator#createProposal
+		 * @see com.lorands.hunspell4eclipse.ICompletionProposalCreator#createProposal
 		 * (java.lang.String, int, int, int)
 		 */
 		@Override
-		public ICompletionProposal createProposal(String replacementString,
-				int replacementOffset, int replacementLength, int cursorPosition) {
+		public ICompletionProposal createProposal(String replacementString, int replacementOffset,
+				int replacementLength, int cursorPosition) {
 
-			return new JavaCompletionProposal(replacementString,
-					replacementOffset, replacementLength, cursorPosition,
+			return new JavaCompletionProposal(replacementString, replacementOffset, replacementLength, cursorPosition,
 					relevance);
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * com.lorands.hunspell4eclipse.ICompletionProposalCreator#setup(java
+		 * @see com.lorands.hunspell4eclipse.ICompletionProposalCreator#setup(java
 		 * .util.Map)
 		 */
 		@Override
@@ -224,17 +208,15 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.texteditor.spelling.ISpellingEngine#check(org.eclipse.
+	 * @see org.eclipse.ui.texteditor.spelling.ISpellingEngine#check(org.eclipse.
 	 * jface.text.IDocument, org.eclipse.jface.text.IRegion[],
 	 * org.eclipse.ui.texteditor.spelling.SpellingContext,
 	 * org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public void check(IDocument document, IRegion[] regions,
-			SpellingContext context, ISpellingProblemCollector collector,
-			IProgressMonitor monitor) {
+	public void check(IDocument document, IRegion[] regions, SpellingContext context,
+			ISpellingProblemCollector collector, IProgressMonitor monitor) {
 
 		// ASTParser parser = ASTParser.newParser(AST.JLS3);
 		// parser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
@@ -252,14 +234,10 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 			int wRegionOffset = region.getOffset();
 			int wRegionLength = region.getLength();
 			try {
-				partitions = TextUtilities.computePartitioning(document,
-						IJavaPartitions.JAVA_PARTITIONING, wRegionOffset,
-						wRegionLength, false);
+				partitions = TextUtilities.computePartitioning(document, IJavaPartitions.JAVA_PARTITIONING,
+						wRegionOffset, wRegionLength, false);
 			} catch (BadLocationException e) {
-				CLog.logErr(
-						this,
-						"check",
-						e,
+				CLog.logErr(this, "check", e,
 						"Spelling Service provided offset/length that points out of the document RegionOffset=[%d] RegionLength=[%d]",
 						wRegionOffset, wRegionLength);
 
@@ -274,22 +252,17 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 				ITypedRegion partition = partitions[index];
 				if (!partition.getType().equals(IDocument.DEFAULT_CONTENT_TYPE)) {
 
-					IRegion innerRegion = new Region(region.getOffset()
-							+ partition.getOffset(), partition.getLength());
+					IRegion innerRegion = new Region(region.getOffset() + partition.getOffset(), partition.getLength());
 
 					if (partition.getType().equals(IJavaPartitions.JAVA_DOC)
-							|| partition.getType().equals(
-									IJavaPartitions.JAVA_MULTI_LINE_COMMENT)
-							|| partition.getType().equals(
-									IJavaPartitions.JAVA_SINGLE_LINE_COMMENT)) {
+							|| partition.getType().equals(IJavaPartitions.JAVA_MULTI_LINE_COMMENT)
+							|| partition.getType().equals(IJavaPartitions.JAVA_SINGLE_LINE_COMMENT)) {
 
 						// diagnose (activated if the "hunspell.log.on"
 						// system
 						// property is defined).
 						if (CLog.on())
-							CLog.logOut(this, "check",
-									"Adds one partitionType=[%s]",
-									partition.getType());
+							CLog.logOut(this, "check", "Adds one partitionType=[%s]", partition.getType());
 
 						// adds javadocs, comments
 						regionsList.add(innerRegion);
@@ -301,33 +274,29 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 		}
 
 		// call the check implemented in the abstract AbstractHunSpellEngine
-		super.checkInner(document, regionsList.toArray(EMPTY_REGION_ARRAY),
-				context, collector, monitor);
+		super.checkInner(document, regionsList.toArray(EMPTY_REGION_ARRAY), context, collector, monitor);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.lorands.hunspell4eclipse.AbstractHunSpellEngine#checkOneRegion(org
+	 * @see com.lorands.hunspell4eclipse.AbstractHunSpellEngine#checkOneRegion(org
 	 * .eclipse.jface.text.IDocument, org.eclipse.jface.text.IRegion,
 	 * org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector,
 	 * org.eclipse.core.runtime.IProgressMonitor, int)
 	 */
 	@Override
-	protected int checkOneRegion(IDocument document, IRegion region,
-			ISpellingProblemCollector collector, IProgressMonitor monitor,
-			int aNbFoundProblem) {
+	protected int checkOneRegion(IDocument document, IRegion region, ISpellingProblemCollector collector,
+			IProgressMonitor monitor, int aNbFoundProblem) {
 
 		if (CLog.on())
-			CLog.logOut(this, "checkOneRegion",
-					"region: ofset=[%d] length=[%d]", region.getOffset(),
+			CLog.logOut(this, "checkOneRegion", "region: ofset=[%d] length=[%d]", region.getOffset(),
 					region.getLength());
 
 		// reuse the internal class SpellCheckIterator of the jdt to have the
 		// same word splitting rules
-		ISpellCheckIterator wSPIterator = new HunspellJavaSpellCheckIterator(
-				document, region, getSelectedDictionary().getLocale());
+		ISpellCheckIterator wSPIterator = new HunspellJavaSpellCheckIterator(document, region,
+				getSelectedDictionary().getLocale());
 
 		// set one of the option
 		wSPIterator.setIgnoreSingleLetters(isSingleLetterIgnored());
@@ -340,11 +309,9 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 				int wDistance = wSPIterator.getBegin();
 				wI++;
 				if (CLog.on())
-					CLog.logOut(this, "checkOneRegion", "word(%d)=[%s][%d]",
-							wI, wWord, wDistance);
+					CLog.logOut(this, "checkOneRegion", "word(%d)=[%s][%d]", wI, wWord, wDistance);
 
-				if (!super.checkOneWord(document, region, collector, wWord,
-						wDistance)) {
+				if (!super.checkOneWord(document, region, collector, wWord, wDistance)) {
 					aNbFoundProblem++;
 					// limit reached, get out
 					if (aNbFoundProblem >= getNbAcceptedProblems())
@@ -358,29 +325,24 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.lorands.hunspell4eclipse.AbstractHunSpellEngine#buildIProposal(java
+	 * @see com.lorands.hunspell4eclipse.AbstractHunSpellEngine#buildIProposal(java
 	 * .lang.String, int, int)
 	 */
 	@Override
-	protected ICompletionProposal newProposal(IDocument document,
-			String suggest, int inOffset, int strLength) {
+	protected ICompletionProposal newProposal(IDocument document, String suggest, int inOffset, int strLength) {
 
-		String[] wArguments = JavaHunspellingProblem
-				.calcWordCorrectionArguments(document, inOffset, strLength);
+		String[] wArguments = JavaHunspellingProblem.calcWordCorrectionArguments(document, inOffset, strLength);
 
-		IQuickAssistInvocationContext wContext = new TextInvocationContext(
-				null, inOffset, strLength);
+		IQuickAssistInvocationContext wContext = new TextInvocationContext(null, inOffset, strLength);
 
-		WordCorrectionProposal wProposal = new WordCorrectionProposal(suggest,
-				wArguments, inOffset, strLength, wContext, 1);
+		WordCorrectionProposal wProposal = new WordCorrectionProposal(suggest, wArguments, inOffset, strLength,
+				wContext, 1);
 
 		// diagnose (activated if the "hunspell.log.on"
 		// system
 		// property is defined).
 		if (CLog.on())
-			CLog.logOut(this, "newProposal", "kind=[%s] suggest=[%s]",
-					wProposal.getClass().getSimpleName(), suggest);
+			CLog.logOut(this, "newProposal", "kind=[%s] suggest=[%s]", wProposal.getClass().getSimpleName(), suggest);
 
 		return wProposal;
 	}
@@ -388,17 +350,14 @@ public final class JavaHunspellEngine extends HunspellEngineBase {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.lorands.hunspell4eclipse.AbstractHunSpellEngine#newSpellingProblem
+	 * @see com.lorands.hunspell4eclipse.AbstractHunSpellEngine#newSpellingProblem
 	 * (int, int, java.lang.String,
 	 * org.eclipse.jface.text.contentassist.ICompletionProposal[])
 	 */
 	@Override
-	protected SpellingProblem newSpellingProblem(IDocument document,
-			int offset, int length, String message,
+	protected SpellingProblem newSpellingProblem(IDocument document, int offset, int length, String message,
 			ICompletionProposal[] proposals) {
-		return new JavaHunspellingProblem(offset, length, message, proposals,
-				document);
+		return new JavaHunspellingProblem(offset, length, message, proposals, document);
 	}
 
 }
