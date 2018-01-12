@@ -20,7 +20,6 @@ import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector;
 import org.eclipse.ui.texteditor.spelling.SpellingContext;
-import org.isandlatech.plugins.rest.parser.RestLanguage;
 
 import com.lorands.hunspell4eclipse.HunspellCheckIterator;
 import com.lorands.hunspell4eclipse.HunspellEngineBase;
@@ -47,8 +46,7 @@ public final class RestHunspellEngine extends HunspellEngineBase {
 		 * @param region
 		 * @param locale
 		 */
-		public RestHunspellCheckIterator(IDocument document, IRegion region,
-				Locale locale) {
+		public RestHunspellCheckIterator(IDocument document, IRegion region, Locale locale) {
 			super(document, region, locale);
 		}
 
@@ -61,15 +59,12 @@ public final class RestHunspellEngine extends HunspellEngineBase {
 				return false;
 
 			boolean wResult = false;
-			if (aToken.length() > 2
-					&& RestLanguage.FIELD_MARKER.equals(super.getTokenNext())) {
+			if (aToken.length() > 2 && RestLanguage.FIELD_MARKER.equals(super.getTokenNext())) {
 
 				if (super.isToken(aToken, RestLanguage.DIRECTIVES)
 						|| super.isToken(aToken, RestLanguage.SPHINX_DIRECTIVES)
-						|| super.isToken(aToken,
-								RestLanguage.SPHINX_EXTENSIONS_DIRECTIVES)
-						|| super.isToken(aToken,
-								RestHunspellEngine.SPHINX_DIRECTIVES_PARAMS)) {
+						|| super.isToken(aToken, RestLanguage.SPHINX_EXTENSIONS_DIRECTIVES)
+						|| super.isToken(aToken, RestHunspellEngine.SPHINX_DIRECTIVES_PARAMS)) {
 					wResult = true;
 				}
 			}
@@ -77,9 +72,8 @@ public final class RestHunspellEngine extends HunspellEngineBase {
 			// system
 			// property is defined).
 			if (CLog.on())
-				CLog.logOut(this, "isRestOrSphinxWords",
-						"[%s] is Rest or Sphinx token [%b]",
-						String.valueOf(aToken), wResult);
+				CLog.logOut(this, "isRestOrSphinxWords", "[%s] is Rest or Sphinx token [%b]", String.valueOf(aToken),
+						wResult);
 
 			return wResult;
 		}
@@ -87,8 +81,7 @@ public final class RestHunspellEngine extends HunspellEngineBase {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.eclipse.jdt.internal.ui.text.spelling.SpellCheckIterator#next()
+		 * @see org.eclipse.jdt.internal.ui.text.spelling.SpellCheckIterator#next()
 		 */
 		@Override
 		public String next() {
@@ -106,29 +99,25 @@ public final class RestHunspellEngine extends HunspellEngineBase {
 	 * @author Lorand Somogyi
 	 * 
 	 */
-	public static class RestProposalCreator implements
-			ICompletionProposalCreator {
+	public static class RestProposalCreator implements ICompletionProposalCreator {
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * com.lorands.hunspell4eclipse.ICompletionProposalCreator#createProposal
+		 * @see com.lorands.hunspell4eclipse.ICompletionProposalCreator#createProposal
 		 * (java.lang.String, int, int, int)
 		 */
 		@Override
-		public ICompletionProposal createProposal(String replacementString,
-				int replacementOffset, int replacementLength, int cursorPosition) {
+		public ICompletionProposal createProposal(String replacementString, int replacementOffset,
+				int replacementLength, int cursorPosition) {
 
-			return new CompletionProposal(replacementString, replacementOffset,
-					replacementLength, cursorPosition);
+			return new CompletionProposal(replacementString, replacementOffset, replacementLength, cursorPosition);
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * com.lorands.hunspell4eclipse.ICompletionProposalCreator#setup(java
+		 * @see com.lorands.hunspell4eclipse.ICompletionProposalCreator#setup(java
 		 * .util.Map)
 		 */
 		@Override
@@ -137,8 +126,7 @@ public final class RestHunspellEngine extends HunspellEngineBase {
 		}
 	}
 
-	private static final String[] SPHINX_DIRECTIVES_PARAMS = { "alt",
-			"maxdepth" };
+	private static final String[] SPHINX_DIRECTIVES_PARAMS = { "alt", "maxdepth" };
 
 	/**
 	 * 
@@ -150,17 +138,15 @@ public final class RestHunspellEngine extends HunspellEngineBase {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.ui.texteditor.spelling.ISpellingEngine#check(org.eclipse.
+	 * @see org.eclipse.ui.texteditor.spelling.ISpellingEngine#check(org.eclipse.
 	 * jface.text.IDocument, org.eclipse.jface.text.IRegion[],
 	 * org.eclipse.ui.texteditor.spelling.SpellingContext,
 	 * org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector,
 	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public void check(IDocument document, IRegion[] regions,
-			SpellingContext context, ISpellingProblemCollector collector,
-			IProgressMonitor monitor) {
+	public void check(IDocument document, IRegion[] regions, SpellingContext context,
+			ISpellingProblemCollector collector, IProgressMonitor monitor) {
 
 		// call the check implemented in the abstract AbstractHunSpellEngine
 		super.checkInner(document, regions, context, collector, monitor);
@@ -169,26 +155,23 @@ public final class RestHunspellEngine extends HunspellEngineBase {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.lorands.hunspell4eclipse.AbstractHunSpellEngine#checkOneRegion(org
+	 * @see com.lorands.hunspell4eclipse.AbstractHunSpellEngine#checkOneRegion(org
 	 * .eclipse.jface.text.IDocument, org.eclipse.jface.text.IRegion,
 	 * org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector,
 	 * org.eclipse.core.runtime.IProgressMonitor, int)
 	 */
 	@Override
-	protected int checkOneRegion(IDocument document, IRegion region,
-			ISpellingProblemCollector collector, IProgressMonitor monitor,
-			int aNbFoundProblem) {
+	protected int checkOneRegion(IDocument document, IRegion region, ISpellingProblemCollector collector,
+			IProgressMonitor monitor, int aNbFoundProblem) {
 
 		if (CLog.on())
-			CLog.logOut(this, "checkOneRegion",
-					"region: ofset=[%d] length=[%d]", region.getOffset(),
+			CLog.logOut(this, "checkOneRegion", "region: ofset=[%d] length=[%d]", region.getOffset(),
 					region.getLength());
 
 		// reuse the internal class SpellCheckIterator of the jdt to have the
 		// same word splitting rules
-		IHunspellCheckIterator wCheckIterator = new RestHunspellCheckIterator(
-				document, region, getSelectedDictionary().getLocale());
+		IHunspellCheckIterator wCheckIterator = new RestHunspellCheckIterator(document, region,
+				getSelectedDictionary().getLocale());
 
 		// set one of the option
 		wCheckIterator.setIgnoreSingleLetters(isSingleLetterIgnored());
@@ -201,11 +184,9 @@ public final class RestHunspellEngine extends HunspellEngineBase {
 				int wDistance = wCheckIterator.getBegin();
 				wI++;
 				if (CLog.on())
-					CLog.logOut(this, "checkOneRegion", "word(%d)=[%s][%d]",
-							wI, wWord, wDistance);
+					CLog.logOut(this, "checkOneRegion", "word(%d)=[%s][%d]", wI, wWord, wDistance);
 
-				if (!super.checkOneWord(document, region, collector, wWord,
-						wDistance)) {
+				if (!super.checkOneWord(document, region, collector, wWord, wDistance)) {
 					aNbFoundProblem++;
 					// limit reached, get out
 					if (aNbFoundProblem >= getNbAcceptedProblems())
